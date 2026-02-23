@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+
+        * {
+            box-sizing: border-box;
+            background-color:rgb(249, 232, 241);
+            font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+        }
+        button {
+            border: 2px solid rgb(244, 232, 245);
+            padding: 10px 10px; 
+            margin: 5px auto; 
+            cursor: pointer; 
+            border-color: rgb(150, 130, 200);
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+    </style>
+    <title>Fortune Cookie</title>
+
+</head>
+
+<body>
+    <h2 style="text-align: center;"><a href="index.html" style="color: darkblue;">Return to Menu</a></h2>
+  <h1 style="text-align: center; color:darkslateblue;">Fortune Cookie</h1>
+    <div class ="fortune-box" id="fortune-box" style="border: 2px solid rgb(66, 31, 141); padding: 20px; margin: 20px auto; width: 300px; text-align: center; font-size: 18px; background-color: slateblue; color: white; border-radius: 15px;">
+       
+    </div>
+    <div class="button-container" style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
+        <button class="red-button" style="background-color: red; "></button>
+        <button class="blue-button" style="background-color: blue; "></button>
+        <button class="green-button" style="background-color: green;"></button>
+        <button class="yellow-button" style="background-color: yellow;"></button>
+    
+
+<script>
+window.onload = function showFortune() {
+    const fortunes = [
+        "You will have a great day!",
+        "A surprise is waiting for you.",
+        "Good news will come to you soon.",
+        "You will achieve your goals.",
+        "Happiness is around the corner."
+    ];
+
+    const randomIndex = Math.floor(Math.random() * fortunes.length);
+    const fortune = fortunes[randomIndex];
+    document.getElementById("fortune-box").textContent = fortune;
+
+
+  function clickredbutton() {
+        document.getElementById("fortune-box").style.color = "purple";
+        document.getElementById("fortune-box").style.fontSize = "20px";
+        document.getElementById("fortune-box").style.borderColor = "red";
+        document.getElementById("fortune-box").style.backgroundColor = "pink";
+        document.getElementById("fortune-box").style.fontFamily = "Arial, sans-serif";
+       
+
+    }
+  
+    function clickbluebutton() {
+        document.getElementById("fortune-box").style.color = "navy";
+        document.getElementById("fortune-box").style.fontSize = "25px";
+        document.getElementById("fortune-box").style.borderColor = "blue";
+        document.getElementById("fortune-box").style.backgroundColor = "lightblue";
+        document.getElementById("fortune-box").style.fontFamily = "Comic Sans MS, cursive, sans-serif";
+       
+
+    }
+
+    function clickgreenbutton() {
+        document.getElementById("fortune-box").style.color = "maroon";
+        document.getElementById("fortune-box").style.fontSize = "15px";
+        document.getElementById("fortune-box").style.borderColor = "green";
+        document.getElementById("fortune-box").style.backgroundColor = "lightgreen";
+        document.getElementById("fortune-box").style.fontFamily = "Courier New, monospace";
+       
+
+    }
+
+    function clickyellowbutton() {
+        document.getElementById("fortune-box").style.color = "#lavender";
+        document.getElementById("fortune-box").style.fontSize = "14px";
+        document.getElementById("fortune-box").style.borderColor = "yellow";
+        document.getElementById("fortune-box").style.backgroundColor = "lightyellow";
+        document.getElementById("fortune-box").style.fontFamily = "Papyrus, sans-serif";
+       
+
+    }
+    const button_red = document.querySelectorAll(".red-button");
+    const button_blue = document.querySelectorAll(".blue-button");
+    const button_green = document.querySelectorAll(".green-button");
+    const button_yellow = document.querySelectorAll(".yellow-button");
+
+    var buttons = [button_red, button_blue, button_green, button_yellow];
+    buttons.forEach(element => {
+        element.forEach(button => {
+            button.addEventListener("click", function() {
+                if (this.classList.contains("red-button")) {
+                    clickredbutton();
+                } else if (this.classList.contains("blue-button")) {
+                    clickbluebutton();
+                } else if (this.classList.contains("green-button")) {
+                    clickgreenbutton();
+                } else if (this.classList.contains("yellow-button")) {
+                    clickyellowbutton();
+                }
+            });
+        });
+    });
+
+    
+  }
+
+
+
+</script>
+</body>
+</html>

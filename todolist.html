@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            background-color:rgb(249, 232, 241);
+            font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+        }
+        button {
+            border: 2px solid rgb(230, 166, 216);
+            padding: 10px 20px; 
+            margin: 20px auto; 
+            cursor: pointer; 
+            border-radius: 5px;
+            display: block;
+            color: white;
+            background-color: palevioletred;
+        }
+        .task-container {
+            text-align: center;
+            margin: 20px auto;
+            max-width: 500px;
+        }
+        
+        #taskList {
+            display: block;
+            list-style-type: none;
+            padding: 20px;
+            margin: 0;
+            border: 2px solid palevioletred;
+            background-color: white;
+        
+        }
+        
+        #taskList li {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: white;
+        }
+        
+        
+        .task-checkbox {
+            margin-right: 15px;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .task-text {
+            flex: auto;
+            text-align: left;
+            background-color: white;
+            color: #737070;
+            padding-right: 10px;
+        }
+        
+    
+        #taskList li:only-child {
+            justify-content: center;
+            color: #888;
+            font-style: italic;
+            border-bottom: none;
+        }
+        
+        
+        .input-container {
+            text-align: center;
+            margin: 20px;
+        }
+        
+        #taskInput {
+            padding: 10px;
+            border: 2px solid palevioletred;
+            border-radius: 5px;
+            width: 300px;
+            margin-right: 10px;
+            background-color: white;
+        }
+        
+        
+    </style>
+    <title>To-Do List</title>
+</head>
+<body>
+    <h2 style="text-align: center;"><a href="index.html">Return to Menu</a></h2>
+    <h1 style="text-align: center; color: palevioletred;">To-Do List</h1>
+    
+    <div class="input-container">
+        <input type="text" id="taskInput" placeholder="Enter a new task...">
+        <button id="addButton">Add Task</button>
+    </div>
+    
+    <div class="task-container">
+        <ul id="taskList"></ul>
+    </div>
+    
+    <div style="text-align: center; margin: 20px;">
+        <p>Total Tasks: <span id="totalCount">0</span> | 
+        Completed: <span id="completedCount">0</span> | 
+        Pending: <span id="pendingCount">0</span></p>
+    </div>
+    
+    
+    <script>
+        let tasks = [];
+        const taskInput = document.getElementById('taskInput');
+        const addButton = document.getElementById('addButton');
+        const taskList = document.getElementById('taskList');
+        const totalCountSpan = document.getElementById('totalCount');
+        const completedCountSpan = document.getElementById('completedCount');
+        const pendingCountSpan = document.getElementById('pendingCount');
+
+        function loadTasks() {
+            const savedTasks = localStorage.getItem('todoTasks');
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks);
+            } else {
+                tasks = []; 
+            }
+            renderTasks();
+        }
+
+        function saveTasks() {
+            localStorage.setItem('todoTasks', JSON.stringify(tasks));
+        }
+
+        function renderTasks() {
+            if (tasks.length === 0) {
+                taskList.innerHTML = '<li>No tasks yet. Add one above!</li>';
+            } else {
+                taskList.innerHTML = tasks.map(task => createTask(task)).join('');
+            }
+            
+            updateStats();
+            attachEventListeners();
+        }
+
+        function createTask(task) {
+            return `
+                <li data-task-id="${task.id}">
+                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+                    <span class="task-text" style="${task.completed ? 'text-decoration: line-through;' : ''}">${task.text}</span>
+                    <button class="delete-button">Delete</button>
+                </li>
+            `;
+        }
+
+        function attachEventListeners() {
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', handleCheckboxChange);
+            });
+
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', handleDelete);
+            });
+        }
+
+        function handleCheckboxChange(event) {
+            const taskItem = event.target.closest('li');
+            const taskId = parseInt(taskItem.dataset.taskId);
+            const task = tasks.find(t=>t.id===taskId);
+            
+            if (task) {
+                task.completed = event.target.checked;
+                
+                const taskText = taskItem.querySelector('.task-text');
+                if (event.target.checked) {
+                    taskText.style.textDecoration = 'line-through';
+                } else {
+                    taskText.style.textDecoration = 'none';
+                }
+                
+                saveTasks();
+                updateStats();
+            }
+        }
+
+        function handleDelete(event) {
+            const taskItem = event.target.closest('li');
+            const taskId = parseInt(taskItem.dataset.taskId);
+            
+            tasks = tasks.filter(task=>task.id!==taskId);
+            
+            saveTasks();
+            renderTasks();
+        }
+
+        function addTask() {
+            const taskText = taskInput.value.trim();
+            
+            if (taskText==='') {
+                alert('Please enter a task!');
+                return;
+            }
+            
+            const newTask = {
+                id: Date.now(),
+                text: taskText,
+                completed: false
+            };
+            
+            tasks.push(newTask);
+            
+            saveTasks();
+            
+            taskInput.value = '';
+            renderTasks();
+        }
+
+        function updateStats() {
+            const total = tasks.length;
+            const completed = tasks.filter(task => task.completed).length;
+            const pending = total - completed;
+            
+            totalCountSpan.textContent = total;
+            completedCountSpan.textContent = completed;
+            pendingCountSpan.textContent = pending;
+        }
+
+    
+        function init() {
+            loadTasks();
+            
+            addButton.addEventListener('click', addTask);
+        }
+
+        init();
+    </script>
+</body>
+</html>
