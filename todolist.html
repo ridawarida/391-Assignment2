@@ -157,6 +157,7 @@
                 <input type="checkbox" class="task-checkbox" ${checkboxAttribute}>
                 <span class="task-text" style="${textDecorationStyle}">${task.text}</span>
                 <button class="delete-button">Delete</button>
+                <button class="edit-button">Edit</button>
             </li>
             `;
            }
@@ -168,6 +169,9 @@
 
             document.querySelectorAll('.delete-button').forEach(button => {
                 button.addEventListener('click', handleDelete);
+            });
+            document.querySelectorAll('.edit-button').forEach(button => {
+                button.addEventListener('click', handleEdit);
             });
         }
 
@@ -192,14 +196,30 @@
         }
 
         function handleDelete(event) {
-            const taskItem = event.target.closest('li');
-            const taskId = parseInt(taskItem.dataset.taskId);
-            
-            tasks = tasks.filter(task=>task.id!==taskId);
-            
-            saveTasks();
-            renderTasks();
-        }
+                const taskItem = event.target.closest('li');
+                const taskId = parseInt(taskItem.dataset.taskId);
+
+                tasks = tasks.filter(t => t.id !== taskId);
+
+                saveTasks();
+                renderTasks();
+            }
+
+        function handleEdit(event){
+                const taskItem = event.target.closest('li');
+                const taskId = parseInt(taskItem.dataset.taskId);
+
+                const task = tasks.find(t => t.id === taskId);
+
+                
+                const newText = prompt("Edit your task:", task.text);
+
+                task.text = newText;
+                
+                
+                saveTasks();
+                renderTasks();
+            }
 
         function addTask() {
             const taskText = taskInput.value.trim();
@@ -222,7 +242,7 @@
             taskInput.value = '';
             renderTasks();
         }
-
+        
         function updateStats() {
             const total = tasks.length;
             const completed = tasks.filter(task => task.completed).length;
@@ -245,5 +265,4 @@
 </body>
 
 </html>
-
 
