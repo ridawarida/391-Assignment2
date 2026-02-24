@@ -132,7 +132,9 @@
             if (tasks.length === 0) {
                 taskList.innerHTML = '<li>No tasks yet. Add one above!</li>';
             } else {
-                taskList.innerHTML = tasks.map(task => createTask(task)).join('');
+                taskList.innerHTML = '';
+                tasks.forEach(task => {
+                taskList.innerHTML += createTask(task); 
             }
             
             updateStats();
@@ -231,4 +233,5 @@
         init();
     </script>
 </body>
+
 </html>
