@@ -142,14 +142,24 @@
         }
 
         function createTask(task) {
-            return `
-                <li data-task-id="${task.id}">
-                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
-                    <span class="task-text" style="${task.completed ? 'text-decoration: line-through;' : ''}">${task.text}</span>
-                    <button class="delete-button">Delete</button>
-                </li>
+            let checkboxAttribute = '';
+            if (task.completed) {
+                checkboxAttribute = 'checked';
+            }
+            
+            let textDecorationStyle = '';
+            if (task.completed) {
+                textDecorationStyle = 'text-decoration: line-through;';
+            }
+
+           return `
+            <li data-task-id="${task.id}">
+                <input type="checkbox" class="task-checkbox" ${checkboxAttribute}>
+                <span class="task-text" style="${textDecorationStyle}">${task.text}</span>
+                <button class="delete-button">Delete</button>
+            </li>
             `;
-        }
+           }
 
         function attachEventListeners() {
             document.querySelectorAll('.task-checkbox').forEach(checkbox => {
@@ -235,3 +245,4 @@
 </body>
 
 </html>
+
