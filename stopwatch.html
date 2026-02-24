@@ -6,9 +6,8 @@
     <style>
         * {
             box-sizing: border-box;
-            background-color:rgb(249, 232, 241);
-            font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-          
+            background-color: rgb(249, 232, 241);
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         }
         button {
             border: 2px solid rgb(244, 232, 245);
@@ -21,7 +20,7 @@
         }
         #stopwatch {
             text-align: center;
-            margin:auto;
+            margin: auto;
             font-size: 24px;
             color: #333;
             background-color: rgb(183, 173, 215);
@@ -34,52 +33,63 @@
 </head>
 <body>
     <h2 style="text-align: center;"><a href="index.html" style="color: darkblue;">Return to Menu</a></h2>
-    <h1 style="text-align: center; color:darkslateblue;">Stopwatch that counts time in multiples of 3 </h1>
+    <h1 style="text-align: center; color:darkslateblue;">Stopwatch that counts time in multiples of 3</h1>
     <div id="stopwatch">
         Time elapsed: 0 seconds
     </div>
 
     <script>
         let interval = null;
-        let autoStopTimeout = null;
-        
+        let started = false;
+        let paused = false;
+        let startTime = 0;
+        let elapsedSeconds = 0;
+
+        const display = document.getElementById('stopwatch');
+
         const startButton = document.createElement('button');
         startButton.textContent = 'Start Stopwatch';
         startButton.style.backgroundColor = 'turquoise';
         startButton.style.color = 'navy';
         document.body.appendChild(startButton);
 
-        function clearAllTimers() { if (interval) {
+        function clearTimer() {
+            if (interval) {
                 clearInterval(interval);
                 interval = null;
-            }
-            
-            if (autoStopTimeout) {
-                clearTimeout(autoStopTimeout);
-                autoStopTimeout = null;
             }
         }
 
         function startStopwatch() {
-            clearAllTimers();
-            
-            const startTime = Date.now();
-            
-            document.getElementById('stopwatch').textContent = 'Time elapsed: 0 seconds';
-            
-            interval = setInterval(() => {
-                const elapsedTime = Math.floor((Date.now() - startTime) / 1000) * 3;
-                document.getElementById('stopwatch').textContent = `Time elapsed: ${elapsedTime} seconds`;
-            }, 1000);
+            if (started) return;
 
-            autoStopTimeout = setTimeout(() => {
-                clearInterval(interval);
-                interval = null;
-                document.getElementById('stopwatch').textContent = 'Stopwatch stopped at 30 seconds';
-                autoStopTimeout = null;
-            }, 10000);
+            started = true;
+
+            if (!paused) {
+                elapsedSeconds = 0;
+            }
+
+            paused = false;
+            startTime = Date.now() - (elapsedSeconds / 3) * 1000;
+
+            clearTimer();
+
+            interval = setInterval(() => {
+                elapsedSeconds = Math.floor((Date.now() - startTime) / 1000) * 3;
+
+                if (elapsedSeconds >= 30) {
+                    elapsedSeconds = 30;
+                    display.textContent = 'Stopwatch stopped at 30 seconds';
+                    clearTimer();
+                    started = false;
+                    paused = false;
+                    return;
+                }
+
+                display.textContent = `Time elapsed: ${elapsedSeconds} seconds`;
+            }, 1000);
         }
-        
+
         startButton.addEventListener('click', startStopwatch);
 
         const stopButton = document.createElement('button');
@@ -89,8 +99,11 @@
         document.body.appendChild(stopButton);
 
         function stopStopwatch() {
-            clearAllTimers();
-            document.getElementById('stopwatch').textContent = 'Stopwatch stopped';
+            
+            paused = true;
+            started = false;
+            clearTimer();
+            display.textContent = `Time elapsed: ${elapsedSeconds} seconds`;
         }
 
         stopButton.addEventListener('click', stopStopwatch);
@@ -102,14 +115,27 @@
         document.body.appendChild(resetButton);
 
         function resetStopwatch() {
-            clearAllTimers();
-            document.getElementById('stopwatch').textContent = 'Time elapsed: 0 seconds';
+            clearTimer();
+            if(!paused){
+                started = false;
+            paused = false;
+            elapsedSeconds = 0;
+            display.textContent = 'Time elapsed: 0 seconds';
+            startStopwatch();
+
+            }
+            else{started = false;
+            paused = false;
+            startTime = 0;
+            interval=null;
+            elapsedSeconds = 0;
+            display.textContent = 'Time elapsed: 0 seconds';}
+            
+
+            
         }
-        
+
         resetButton.addEventListener('click', resetStopwatch);
-
     </script>
-    
 </body>
-
 </html>
