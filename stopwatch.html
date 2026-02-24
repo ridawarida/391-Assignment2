@@ -30,7 +30,7 @@
             border-radius: 10px;
         }
     </style>
-    <title>Stopwatch that counts time in multiples of 3 </title>
+    <title>Stopwatch</title>
 </head>
 <body>
     <h2 style="text-align: center;"><a href="index.html" style="color: darkblue;">Return to Menu</a></h2>
@@ -49,9 +49,7 @@
         startButton.style.color = 'navy';
         document.body.appendChild(startButton);
 
-        function clearAllTimers() {
-            // Clear interval if it exists
-            if (interval) {
+        function clearAllTimers() { if (interval) {
                 clearInterval(interval);
                 interval = null;
             }
@@ -113,4 +111,5 @@
     </script>
     
 </body>
+
 </html>
